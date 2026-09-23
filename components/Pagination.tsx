@@ -23,10 +23,7 @@ export function Pagination({
   }
 
   return (
-    <nav
-      aria-label="Pagination"
-      className="flex items-center justify-center gap-4 mt-6"
-    >
+    <nav aria-label="Pagination" className="flex items-center justify-center gap-4 mt-6">
       {currentPage > 1 && (
         <Link href={createPageURL(currentPage - 1)} className="border rounded px-3 py-2">
           Previous
