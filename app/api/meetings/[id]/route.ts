@@ -10,7 +10,7 @@ export async function GET(
         if (Number.isNaN(id)) {
             return Response.json({ error: "Invalid id" }, { status: 400 });
         }
-        const meeting = getMeetingById(id);
+        const meeting = await getMeetingById(id);
         if (!meeting) {
             return Response.json({ error: "Meeting not found" }, { status: 404 });
         }
