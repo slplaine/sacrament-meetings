@@ -75,11 +75,44 @@ export async function getMeetingById(
   return (rows[0] as unknown as SacramentMeeting) ?? null;
 }
 
-// Mutation stubs — will be wired to the database in Week 04
 export async function addMeeting(
   data: Omit<SacramentMeeting, 'id'>
 ): Promise<SacramentMeeting> {
-  throw new Error('addMeeting: database implementation coming in Week 04');
+  const rows = await sql`
+    INSERT INTO meetings (
+      date,
+      meeting_type,
+      presiding,
+      conducting,
+      announcements,
+      opening_hymn,
+      opening_prayer,
+      ward_business,
+      stake_business,
+      sacrament_hymn,
+      speakers,
+      closing_hymn,
+      closing_prayer
+    )
+    VALUES (
+      ${data.date},
+      ${data.meetingType},
+      ${data.presiding},
+      ${data.conducting},
+      ${data.announcements ?? []},
+      ${JSON.stringify(data.openingHymn)},
+      ${data.openingPrayer},
+      ${JSON.stringify(data.wardBusiness)},
+      ${data.stakeBusiness},
+      ${JSON.stringify(data.sacramentHymn)},
+      ${JSON.stringify(data.speakers)},
+      ${JSON.stringify(data.closingHymn)},
+      ${data.closingPrayer}
+    )
+    RETURNING *
+  `;
+
+  return rows[0] as unknown as SacramentMeeting;
 }
 
 export async function updateMeeting(
@@ -91,7 +124,14 @@ export async function updateMeeting(
     SET
       date = ${updates.date},
       presiding = ${updates.presiding},
-      conducting = ${updates.conducting}
+      conducting = ${updates.conducting},
+      announcements = ${updates.announcements ?? []},
+      opening_hymn = ${JSON.stringify(updates.openingHymn)},
+      opening_prayer = ${updates.openingPrayer},
+      sacrament_hymn = ${JSON.stringify(updates.sacramentHymn)},
+      speakers = ${JSON.stringify(updates.speakers)},
+      closing_hymn = ${JSON.stringify(updates.closingHymn)},
+      closing_prayer = ${updates.closingPrayer}
     WHERE id = ${id}
   `;
 

@@ -2,6 +2,7 @@ import { getMeetings, getMeetingsTotalPages } from '@/lib/meetings-db';
 import { MeetingSearch } from '@/components/MeetingSearch';
 import MeetingCard from '@/components/MeetingCard';
 import { Pagination } from '@/components/Pagination';
+import Link from 'next/link';
 
 export default async function MeetingsPage(props: {
   searchParams?: Promise<{ query?: string; page?: string }>;
@@ -17,6 +18,9 @@ export default async function MeetingsPage(props: {
 
   return (
     <div>
+      <div className="mb-4">
+        <Link href="/meetings/new">Create New Meeting</Link>
+      </div>
       <MeetingSearch />
       {meetings.map((m) => (
         <MeetingCard key={m.id} meeting={m} />

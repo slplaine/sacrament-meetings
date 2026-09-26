@@ -3,21 +3,58 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import {
+  addMeeting,
   updateMeeting as updateMeetingDb,
   deleteMeeting as deleteMeetingDb,
 } from '@/lib/meetings-db';
+
 
 const MeetingFormSchema = z.object({
   date: z.string().min(1, 'Date is required'),
   presiding: z.string().min(2, 'Presiding is required'),
   conducting: z.string().min(2, 'Conducting is required'),
+
+  announcement: z.string(),
+
+  openingHymnNumber: z.string().min(1),
+  openingHymnTitle: z.string().min(1),
+  openingPrayer: z.string().min(1),
+
+  sacramentHymnNumber: z.string().min(1),
+  sacramentHymnTitle: z.string().min(1),
+
+  speaker1Name: z.string(),
+  speaker2Name: z.string(),
+
+  closingHymnNumber: z.string().min(1),
+  closingHymnTitle: z.string().min(1),
+  closingPrayer: z.string().min(1),
 });
+
 export async function createMeeting(formData: FormData) {
   const raw = {
     date: formData.get('date'),
     presiding: formData.get('presiding'),
     conducting: formData.get('conducting'),
-  };
+
+    announcement: formData.get('announcement'),
+
+    openingHymnNumber: formData.get('openingHymnNumber'),
+    openingHymnTitle: formData.get('openingHymnTitle'),
+    openingPrayer: formData.get('openingPrayer'),
+
+    sacramentHymnNumber: formData.get('sacramentHymnNumber'),
+    sacramentHymnTitle: formData.get('sacramentHymnTitle'),
+
+    speaker1Name: formData.get('speaker1Name'),
+    speaker2Name: formData.get('speaker2Name'),
+
+    closingHymnNumber: formData.get('closingHymnNumber'),
+    closingHymnTitle: formData.get('closingHymnTitle'),
+    closingPrayer: formData.get('closingPrayer'),
+    };
+    
+
 
   const validated = MeetingFormSchema.safeParse(raw);
 
@@ -27,20 +64,91 @@ export async function createMeeting(formData: FormData) {
   }
 
   const data = validated.data;
-  
 
-  console.log('Meeting data received:', data);
+try {
+  await addMeeting({
+    date: data.date,
+    meetingType: 'regular',
+    presiding: data.presiding,
+    conducting: data.conducting,
+
+    announcements: data.announcement
+        ? [data.announcement]
+        : [],
+
+    openingHymn: {
+        number: Number(data.openingHymnNumber),
+        title: data.openingHymnTitle,
+    },
+
+    openingPrayer: data.openingPrayer,
+
+    wardBusiness: [],
+
+    stakeBusiness: false,
+
+    sacramentHymn: {
+        number: Number(data.sacramentHymnNumber),
+        title: data.sacramentHymnTitle,
+    },
+
+    speakers: [
+    ...(data.speaker1Name
+        ? [{
+            name: data.speaker1Name,
+            topic: '',
+            type: 'speaker' as const
+        }]
+      : []),
+
+    ...(data.speaker2Name
+        ? [{
+            name: data.speaker2Name,
+            topic: '',
+            type: 'speaker' as const
+        }]
+      : []),
+    ],
+
+    closingHymn: {
+        number: Number(data.closingHymnNumber),
+        title: data.closingHymnTitle,
+    },
+
+    closingPrayer: data.closingPrayer,
+ }); 
+ revalidatePath('/meetings');
+ redirect('/meetings');
+}catch (error) {
+console.error(error);
+throw new Error('Failed to create meeting');
 }
-
+}
 export async function updateMeeting(
   id: number,
   formData: FormData
 ) {
   const raw = {
-    date: formData.get('date'),
-    presiding: formData.get('presiding'),
-    conducting: formData.get('conducting'),
-  };
+  date: formData.get('date'),
+  presiding: formData.get('presiding'),
+  conducting: formData.get('conducting'),
+
+  announcement: formData.get('announcement'),
+
+  openingHymnNumber: formData.get('openingHymnNumber'),
+  openingHymnTitle: formData.get('openingHymnTitle'),
+  openingPrayer: formData.get('openingPrayer'),
+
+  sacramentHymnNumber: formData.get('sacramentHymnNumber'),
+  sacramentHymnTitle: formData.get('sacramentHymnTitle'),
+
+  speaker1Name: formData.get('speaker1Name'),
+  speaker2Name: formData.get('speaker2Name'),
+
+  closingHymnNumber: formData.get('closingHymnNumber'),
+  closingHymnTitle: formData.get('closingHymnTitle'),
+  closingPrayer: formData.get('closingPrayer'),
+};
 
   const validated = MeetingFormSchema.safeParse(raw);
 
@@ -48,20 +156,68 @@ export async function updateMeeting(
     console.error(validated.error.flatten().fieldErrors);
     throw new Error('Invalid meeting data');
   }
+try {
+ await updateMeetingDb(id, {
+  date: validated.data.date,
+  presiding: validated.data.presiding,
+  conducting: validated.data.conducting,
 
-  await updateMeetingDb(id, {
-    date: validated.data.date,
-    presiding: validated.data.presiding,
-    conducting: validated.data.conducting,
-  });
+  announcements: validated.data.announcement
+    ? [validated.data.announcement]
+    : [],
+
+  openingHymn: {
+    number: Number(validated.data.openingHymnNumber),
+    title: validated.data.openingHymnTitle,
+  },
+
+  openingPrayer: validated.data.openingPrayer,
+
+  sacramentHymn: {
+    number: Number(validated.data.sacramentHymnNumber),
+    title: validated.data.sacramentHymnTitle,
+  },
+
+  speakers: [
+    ...(validated.data.speaker1Name
+      ? [{
+          name: validated.data.speaker1Name,
+          topic: '',
+          type: 'speaker' as const,
+        }]
+      : []),
+
+    ...(validated.data.speaker2Name
+      ? [{
+          name: validated.data.speaker2Name,
+          topic: '',
+          type: 'speaker' as const,
+        }]
+      : []),
+  ],
+
+  closingHymn: {
+    number: Number(validated.data.closingHymnNumber),
+    title: validated.data.closingHymnTitle,
+  },
+
+  closingPrayer: validated.data.closingPrayer,
+});
   revalidatePath('/meetings');
   redirect('/meetings');
   console.log('Updating meeting:', id);
+} catch (error) {
+  console.error('UPDATE ERROR:', error);
+  throw error;
 }
-
+}
 export async function deleteMeeting(id: number) {
-  await deleteMeetingDb(id);
-  revalidatePath('/meetings'); 
-  redirect('/meetings');
-  console.log('Deleting meeting:', id);
+  try {
+    await deleteMeetingDb(id);
+    revalidatePath('/meetings');
+    redirect('/meetings');
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to delete meeting');
+}
 }

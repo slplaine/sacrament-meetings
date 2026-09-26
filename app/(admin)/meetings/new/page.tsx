@@ -31,6 +31,91 @@ export default function NewMeetingPage() {
           className="border p-2"
         />
 
+        <label htmlFor="announcement">Announcements</label>
+        <input
+          id="announcement"
+          name="announcement"
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="openingHymnNumber">Opening Hymn Number</label>
+        <input
+          id="openingHymnNumber"
+          name="openingHymnNumber"
+          type="number"
+          className="border p-2"
+        />
+
+        <label htmlFor="openingHymnTitle">Opening Hymn Title</label>
+        <input
+          id="openingHymnTitle"
+          name="openingHymnTitle"
+          type="text" 
+          className="border p-2"
+        />
+        <label htmlFor="openingPrayer">Opening Prayer</label>
+        <input
+          id="openingPrayer"
+          name="openingPrayer"
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="sacramentHymnNumber">Sacrament Hymn Number</label>
+        <input
+          id="sacramentHymnNumber"
+          name="sacramentHymnNumber"
+          type="number"
+          className="border p-2"
+        />  
+
+        <label htmlFor="sacramentHymnTitle">Sacrament Hymn Title</label>
+        <input
+          id="sacramentHymnTitle"
+          name="sacramentHymnTitle"
+          type="text"
+          className="border p-2"
+        />
+        <label htmlFor="speaker1Name">Speaker 1</label>
+        <input
+          id="speaker1Name"
+          name="speaker1Name"
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="speaker2Name">Speaker 2</label>
+        <input
+          id="speaker2Name"
+          name="speaker2Name"
+          type="text"
+          className="border p-2"
+        />
+        <label htmlFor="closingHymnNumber">Closing Hymn Number</label>
+        <input
+          id="closingHymnNumber" 
+          name="closingHymnNumber"
+          type="number"
+          className="border p-2"
+        />
+
+        <label htmlFor="closingHymnTitle">Closing Hymn Title</label>
+        <input
+          id="closingHymnTitle"
+          name="closingHymnTitle" 
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="closingPrayer">Closing Prayer</label>
+        <input
+          id="closingPrayer"  
+          name="closingPrayer"
+          type="text"
+          className="border p-2"
+        />  
+
         <button
           type="submit"
           className="bg-blue-600 text-white p-2 rounded"

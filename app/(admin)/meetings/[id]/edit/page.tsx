@@ -49,6 +49,101 @@ export default async function EditMeetingPage(
           type="text"
           className="border p-2"
         />
+        <label htmlFor="announcement">Announcements</label>
+        <input
+          defaultValue={meeting.announcements?.[0] ?? ''}
+          id="announcement"
+          name="announcement"
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="openingHymnNumber">Opening Hymn Number</label>
+        <input
+          defaultValue={meeting.openingHymn.number}
+          id="openingHymnNumber"
+          name="openingHymnNumber"
+          type="number"
+          className="border p-2"
+        />
+
+        <label htmlFor="openingHymnTitle">Opening Hymn Title</label>
+        <input
+          defaultValue={meeting.openingHymn.title}
+          id="openingHymnTitle"
+          name="openingHymnTitle"
+          type="text" 
+          className="border p-2"
+        />
+        <label htmlFor="openingPrayer">Opening Prayer</label>
+        <input
+          defaultValue={meeting.openingPrayer}
+          id="openingPrayer"
+          name="openingPrayer"
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="sacramentHymnNumber">Sacrament Hymn Number</label>
+        <input
+          defaultValue={meeting.sacramentHymn.number}
+          id="sacramentHymnNumber"
+          name="sacramentHymnNumber"
+          type="number"
+          className="border p-2"
+        />  
+
+        <label htmlFor="sacramentHymnTitle">Sacrament Hymn Title</label>
+        <input
+          defaultValue={meeting.sacramentHymn.title}
+          id="sacramentHymnTitle"
+          name="sacramentHymnTitle"
+          type="text"
+          className="border p-2"
+        />
+        <label htmlFor="speaker1Name">Speaker 1</label>
+        <input
+          defaultValue={meeting.speakers?.[0]?.name ?? ''}
+          id="speaker1Name"
+          name="speaker1Name"
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="speaker2Name">Speaker 2</label>
+        <input
+          defaultValue={meeting.speakers?.[1]?.name ?? ''}
+          id="speaker2Name"
+          name="speaker2Name"
+          type="text"
+          className="border p-2"
+        />
+        <label htmlFor="closingHymnNumber">Closing Hymn Number</label>
+        <input
+          defaultValue={meeting.closingHymn.number}
+          id="closingHymnNumber" 
+          name="closingHymnNumber"
+          type="number"
+          className="border p-2"
+        />
+
+        <label htmlFor="closingHymnTitle">Closing Hymn Title</label>
+        <input
+          defaultValue={meeting.closingHymn.title}
+          id="closingHymnTitle"
+          name="closingHymnTitle" 
+          type="text"
+          className="border p-2"
+        />
+
+        <label htmlFor="closingPrayer">Closing Prayer</label>
+        <input
+          defaultValue={meeting.closingPrayer}
+          id="closingPrayer"  
+          name="closingPrayer"
+          type="text"
+          className="border p-2"
+        />
 
         <button
           type="submit"
