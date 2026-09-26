@@ -86,9 +86,25 @@ export async function updateMeeting(
   id: number,
   updates: Partial<SacramentMeeting>
 ): Promise<SacramentMeeting | null> {
-  throw new Error('updateMeeting: database implementation coming in Week 04');
+  await sql`
+    UPDATE meetings
+    SET
+      date = ${updates.date},
+      presiding = ${updates.presiding},
+      conducting = ${updates.conducting}
+    WHERE id = ${id}
+  `;
+
+  return getMeetingById(id);
 }
 
-export async function deleteMeeting(id: number): Promise<boolean> {
-  throw new Error('deleteMeeting: database implementation coming in Week 04');
+export async function deleteMeeting(
+  id: number
+): Promise<boolean> {
+  await sql`
+    DELETE FROM meetings
+    WHERE id = ${id}
+  `;
+
+  return true;
 }
