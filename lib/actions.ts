@@ -31,7 +31,10 @@ const MeetingFormSchema = z.object({
   closingPrayer: z.string().min(1),
 });
 
-export async function createMeeting(formData: FormData) {
+export async function createMeeting(
+  prevState: State,
+  formData: FormData
+): Promise<State> {
   const raw = {
     date: formData.get('date'),
     presiding: formData.get('presiding'),
@@ -59,8 +62,10 @@ export async function createMeeting(formData: FormData) {
   const validated = MeetingFormSchema.safeParse(raw);
 
   if (!validated.success) {
-    console.error(validated.error.flatten().fieldErrors);
-    throw new Error('Invalid meeting data');
+    return {
+        errors: validated.error.flatten().fieldErrors,
+        message: 'Missing or invalid fields.',
+    };
   }
 
   const data = validated.data;
@@ -117,17 +122,48 @@ try {
 
     closingPrayer: data.closingPrayer,
  }); 
+
+}catch (error) {
+    console.error(error);
+    return {
+    message: 'Database Error. Failed to create meeting.',
+    };
+}
  revalidatePath('/meetings');
  redirect('/meetings');
-}catch (error) {
-console.error(error);
-throw new Error('Failed to create meeting');
 }
-}
+
+export type State = {
+  errors?: {
+    date?: string[];
+    presiding?: string[];
+    conducting?: string[];
+
+    announcement?: string[];
+
+    openingHymnNumber?: string[];
+    openingHymnTitle?: string[];
+    openingPrayer?: string[];
+
+    sacramentHymnNumber?: string[];
+    sacramentHymnTitle?: string[];
+
+    speaker1Name?: string[];
+    speaker2Name?: string[];
+
+    closingHymnNumber?: string[];
+    closingHymnTitle?: string[];
+    closingPrayer?: string[];
+  };
+
+  message?: string | null;
+};
+
 export async function updateMeeting(
   id: number,
+  prevState: State,
   formData: FormData
-) {
+): Promise<State> {
   const raw = {
   date: formData.get('date'),
   presiding: formData.get('presiding'),
@@ -153,8 +189,10 @@ export async function updateMeeting(
   const validated = MeetingFormSchema.safeParse(raw);
 
   if (!validated.success) {
-    console.error(validated.error.flatten().fieldErrors);
-    throw new Error('Invalid meeting data');
+    return {
+        errors: validated.error.flatten().fieldErrors,
+        message: 'Missing or invalid fields.',
+    };
   }
 try {
  await updateMeetingDb(id, {
@@ -203,21 +241,26 @@ try {
 
   closingPrayer: validated.data.closingPrayer,
 });
-  revalidatePath('/meetings');
-  redirect('/meetings');
+  
   console.log('Updating meeting:', id);
 } catch (error) {
-  console.error('UPDATE ERROR:', error);
-  throw error;
+  console.error(error);
+
+  return {
+    message: 'Database Error. Failed to update meeting.',
+  };
 }
+revalidatePath('/meetings');
+redirect('/meetings');
 }
 export async function deleteMeeting(id: number) {
   try {
     await deleteMeetingDb(id);
-    revalidatePath('/meetings');
-    redirect('/meetings');
+    
   } catch (error) {
     console.error(error);
     throw new Error('Failed to delete meeting');
 }
+revalidatePath('/meetings');
+redirect('/meetings');
 }
