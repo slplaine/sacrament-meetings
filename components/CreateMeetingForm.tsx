@@ -12,9 +12,6 @@ export default function NewMeetingPage() {
     const [state, formAction, isPending] = useActionState(createMeeting, initialState);
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">
-        Create Meeting
-      </h1>
 
       <form action={formAction} className ="flex flex-col gap-4 max-w-md">
         <label htmlFor="date">Date</label>

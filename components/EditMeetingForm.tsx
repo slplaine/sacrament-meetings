@@ -26,9 +26,7 @@ export default function EditMeetingForm(
 
     return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">
-        Edit Meeting
-      </h1>
+      
 
       <form action={formAction} className="flex flex-col gap-4 max-w-md">
        <label htmlFor="date">Date</label>
