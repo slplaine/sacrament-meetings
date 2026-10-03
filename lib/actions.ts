@@ -1,4 +1,5 @@
 'use server';
+import { auth } from '@/auth';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
@@ -9,6 +10,15 @@ import {
   updateMeeting as updateMeetingDb,
   deleteMeeting as deleteMeetingDb,
 } from '@/lib/meetings-db';
+async function requireAuth() {
+  const session = await auth();
+
+  if (!session?.user) {
+    throw new Error('Not authenticated');
+  }
+
+  return session;
+}
 
 
 const MeetingFormSchema = z.object({
@@ -37,6 +47,7 @@ export async function createMeeting(
   prevState: State,
   formData: FormData
 ): Promise<State> {
+  await requireAuth();
   const raw = {
     date: formData.get('date'),
     presiding: formData.get('presiding'),
@@ -166,6 +177,7 @@ export async function updateMeeting(
   prevState: State,
   formData: FormData
 ): Promise<State> {
+  await requireAuth();
   const raw = {
   date: formData.get('date'),
   presiding: formData.get('presiding'),
@@ -256,16 +268,20 @@ revalidatePath('/meetings');
 redirect('/meetings');
 }
 export async function deleteMeeting(id: number) {
+  await requireAuth();
+
   try {
     await deleteMeetingDb(id);
-    
   } catch (error) {
     console.error(error);
     throw new Error('Failed to delete meeting');
+  }
+
+  revalidatePath('/meetings');
+  redirect('/meetings');
 }
-revalidatePath('/meetings');
-redirect('/meetings');
-}
+
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
